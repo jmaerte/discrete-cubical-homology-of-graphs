@@ -24,12 +24,20 @@ public class Graph {
         vertices.add(factory.genVertex(label));
     }
 
+    public Vertex getVertex(int i) {
+        return (i < this.vertices.occupation() && i >= 0) ? this.vertices.list[i] : null;
+    }
+
     public void addEdge(int i, int j) {
         link(vertices.list[i], vertices.list[j]);
     }
 
     protected void link(Vertex a, Vertex b) {
         if(a.addEdge(b) && b.addEdge(a)) edges++;
+    }
+
+    public int size() {
+        return vertices.occupation();
     }
 
     public String toString() {
