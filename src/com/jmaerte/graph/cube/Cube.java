@@ -16,7 +16,8 @@ import com.jmaerte.util.Shifter;
  */
 public class Cube extends Graph {
 
-    Cube[] faces; // the i-th cube is the one, we get by setting the i/2-th entry of the vertices to either 0, if i is even oder 1 if i is odd.
+    public Cube[] faces; // the i-th cube is the one, we get by setting the i/2-th entry of the vertices to either 0, if i is even oder 1 if i is odd.
+    public int dimension;
 
     public Cube() {
         faces = new Cube[0];
@@ -25,6 +26,7 @@ public class Cube extends Graph {
     }
 
     public Cube(int n) {
+        dimension = n;
         factory = new CubeVertexFactory();
         vertices = new IndexList<Vertex>(Vertex[].class);
         faces = new Cube[2 * n]; // the cube has 2n faces of dimension n-1.
@@ -65,6 +67,7 @@ public class Cube extends Graph {
         }
         for(int i = 0; i < 2 * n; i++) {
             this.faces[i] = new Cube();
+            this.faces[i].dimension = n - 1;
             this.faces[i].vertices = faces[i];
         }
         for(int i = 0; i < vertices.occupation(); i++) {
@@ -75,6 +78,10 @@ public class Cube extends Graph {
                 if(diff == (diff & -diff)) link(v, w);
             }
         }
+    }
+
+    public int getDimension() {
+        return dimension;
     }
 
     @Override
