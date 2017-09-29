@@ -29,7 +29,7 @@ public class MapFactory {
      */
     private void generate(IndexList<Homomorphism> list, int i) throws Exception {
         Homomorphism initial = new Homomorphism(new Homomorphism(preimage, image), i, 0);
-        
+
     }
 
     public static int[] possibilities(Homomorphism hom, int i) throws Exception {
