@@ -7,7 +7,7 @@ import com.jmaerte.util.IndexList;
  */
 public class Graph {
 
-    private IndexList<Vertex> vertices;
+    protected IndexList<Vertex> vertices;
     protected int edges = 0;
     protected VertexFactory factory;
 
@@ -28,7 +28,7 @@ public class Graph {
         link(vertices.list[i], vertices.list[j]);
     }
 
-    private void link(Vertex a, Vertex b) {
+    protected void link(Vertex a, Vertex b) {
         if(a.addEdge(b) && b.addEdge(a)) edges++;
     }
 

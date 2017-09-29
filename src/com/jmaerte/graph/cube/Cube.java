@@ -16,9 +16,6 @@ import com.jmaerte.util.Shifter;
  */
 public class Cube extends Graph {
 
-    protected VertexFactory factory;
-    protected IndexList<Vertex> vertices;
-
     Cube[] faces; // the i-th cube is the one, we get by setting the i/2-th entry of the vertices to either 0, if i is even oder 1 if i is odd.
 
     public Cube() {
@@ -78,15 +75,6 @@ public class Cube extends Graph {
                 if(diff == (diff & -diff)) link(v, w);
             }
         }
-    }
-
-    @Override
-    public void addEdge(int i, int j) {
-        link(vertices.list[i], vertices.list[j]);
-    }
-
-    private void link(Vertex a, Vertex b) {
-        if(a.addEdge(b) && b.addEdge(a)) edges++;
     }
 
     @Override
