@@ -1,11 +1,10 @@
 package com.jmaerte.main;
 
-import com.jmaerte.graph.cube.Cube;
-import com.jmaerte.graph.Graph;
 import com.jmaerte.hom.Homomorphism;
 import com.jmaerte.hom.MapFactory;
-
-import java.util.Arrays;
+import com.jmaerte.homology.Homology;
+import com.jmaerte.graph.cube.Cube;
+import com.jmaerte.graph.Graph;
 
 /**
  * Created by Julian on 28/09/2017.
@@ -64,17 +63,19 @@ public class Main {
         hasVal2[2] = true;
         val2[3] = 4;
         hasVal2[3] = true;
-        try{
-            Homomorphism hom = new Homomorphism(cube, graph, val, hasVal);
-            long time = System.currentTimeMillis();
-            MapFactory.possibilities(hom, 5);
-            System.out.println(System.currentTimeMillis() - time);
-            Homomorphism hom2 = new Homomorphism(new Cube(2), graph, val2, hasVal2);
-            System.out.println(hom.compareToRestricted('-', 0, hom2));
-
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
+//        try{
+//            Homomorphism hom = new Homomorphism(cube, graph, val, hasVal);
+//            long time = System.currentTimeMillis();
+//            MapFactory.possibilities(hom, 5);
+//            System.out.println(System.currentTimeMillis() - time);
+//            Homomorphism hom2 = new Homomorphism(new Cube(2), graph, val2, hasVal2);
+//            System.out.println(hom.compareToRestricted('-', 0, hom2));
+//
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//        }
+        Homology homology = new Homology(graph);
+        homology.homology(0, 3);
     }
 
 }

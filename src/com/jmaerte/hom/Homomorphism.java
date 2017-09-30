@@ -11,7 +11,7 @@ public class Homomorphism implements Comparable<Homomorphism> {
 
     protected Cube preimage;
     protected Graph image;
-    protected int[] values;
+    public int[] values;
     protected boolean[] hasValue;
 
 
@@ -59,6 +59,21 @@ public class Homomorphism implements Comparable<Homomorphism> {
         }
     }
 
+    /**Fills in the values array from the overlying homomorphisms.
+     * Only use when you initialized this homomorphism in this way.
+     */
+    public void finish() {
+        if(values != null) return;
+        values = new int[this.preimage.size()];
+        hasValue = new boolean[values.length];
+        Homomorphism current = this;
+        for(int k = layer; k >= 0; k--) {
+            values[k] = current.value;
+            current = current.parental;
+            hasValue[k] = true;
+        }
+    }
+
     public Vertex getVertex(int i) {
         return hasValue[i] ? image.getVertex(values[i]) : null;
     }
@@ -69,8 +84,11 @@ public class Homomorphism implements Comparable<Homomorphism> {
      * @return
      */
     public int compareTo(Homomorphism that) {
-        if(this.preimage != that.preimage || this.image != that.image) System.exit(0);
-        for(int i = 0; i < this.values.length; i++) {
+        if(this.preimage != that.preimage || this.image != that.image) {
+            new Exception("Can't be compared!").printStackTrace();
+            System.exit(0);
+        }
+        for(int i = 0; i < this.preimage.size(); i++) {
             if(this.get(i) != that.get(i)) return this.get(i) - that.get(i);
         }
         return 0;
@@ -84,13 +102,38 @@ public class Homomorphism implements Comparable<Homomorphism> {
      * @return
      */
     public int compareToRestricted(char sign, int i, Homomorphism that) {
-        if(that.preimage.getDimension() != this.preimage.getDimension() - 1) System.exit(0);
+        if(that.preimage.getDimension() != this.preimage.getDimension() - 1) {
+            new Exception("Can't be compared!").printStackTrace();
+            System.exit(0);
+        }
         Cube pseudo = this.preimage.faces[2 * i + (sign == '-' ? 0 : 1)];
         System.out.println(pseudo);
         for(int k = 0; k < that.preimage.size(); k++) {
             if(this.get(pseudo.getVertex(k).id) != that.get(k)) return this.get(pseudo.getVertex(k).id) - that.get(k);
         }
         return 0;
+    }
+
+    /**Checks if fi^+ == fi^-
+     *
+     * @param i
+     * @return
+     */
+    public boolean isZero(int i) {
+        Cube plus = this.preimage.faces[2 * i + 1];
+        Cube minus = this.preimage.faces[2 * i];
+        for(int k = 0; k < plus.size(); k++) {
+            if(get(plus.getVertex(k).id) != get(minus.getVertex(k).id)) return false;
+        }
+        return true;
+    }
+
+    public String toString() {
+        String s = "{";
+        for(int i = 0; i < this.preimage.size(); i++) {
+            s += image.getVertex(get(i)).id + (i + 1 != this.preimage.size() ? ", " : "}");
+        }
+        return s;
     }
 
 }
