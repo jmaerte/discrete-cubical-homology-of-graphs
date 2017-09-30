@@ -41,7 +41,6 @@ public class Homology {
                     e.printStackTrace();
                 }
                 cache[0] = cache[1];
-                cache[1] = new IndexList<>(Homomorphism[].class);
                 smithCache[0] = smithCache[1];
             }
             r = cache[0].occupation();
@@ -261,13 +260,14 @@ public class Homology {
         return left;
     }
 
-    public int binarySearch(IndexList<Homomorphism> list, Homomorphism hom, int i, char sign) {
+    public int binarySearch(IndexList<Homomorphism> lower, Homomorphism hom, int i, char sign) {
+        System.out.println(hom + " " + i + " " + sign);
         int left = 0;
-        int right = list.occupation();
+        int right = lower.occupation();
         while(left < right) {
             int mid = (left + right) / 2;
-            if(hom.compareToRestricted(sign, i, list.list[mid]) < 0) right = mid;
-            else if(hom.compareToRestricted(sign, i, list.list[mid]) > 0) left = mid + 1;
+            if(hom.compareToRestricted(sign, i, lower.list[mid]) < 0) right = mid;
+            else if(hom.compareToRestricted(sign, i, lower.list[mid]) > 0) left = mid + 1;
             else return mid;
         }
         return left;

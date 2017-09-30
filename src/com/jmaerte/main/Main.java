@@ -14,11 +14,11 @@ public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph();
         // Outer Points
-        graph.addVertex("a_out");
-        graph.addVertex("b_out");
-        graph.addVertex("c_out");
-        graph.addVertex("d_out");
-        graph.addVertex("e_out");
+        graph.addVertex("a");
+        graph.addVertex("b");
+        graph.addVertex("c");
+        graph.addVertex("d");
+        graph.addVertex("e");
 
         // Outer edges
         graph.addEdge(0,1);
@@ -33,7 +33,7 @@ public class Main {
         Cube cube = new Cube(3);
         long diff = System.currentTimeMillis() - ms;
 
-        System.out.println(cube);
+//        System.out.println(cube);
         System.out.println(diff);
 
         int[] val = new int[8];
@@ -74,8 +74,18 @@ public class Main {
 //        }catch(Exception e) {
 //            e.printStackTrace();
 //        }
-        Homology homology = new Homology(graph);
-        homology.homology(0, 3);
+
+//        MapFactory factory = new MapFactory(2, graph);
+//        System.out.println(factory.generate());
+
+//        Homology homology = new Homology(graph);
+//        homology.homology(0, 3);
+
+        long ms2 = System.currentTimeMillis();
+        MapFactory factory = new MapFactory(5, graph);
+        System.out.println(factory.generate().occupation());
+        System.out.println(System.currentTimeMillis() - ms2);
+
     }
 
 }

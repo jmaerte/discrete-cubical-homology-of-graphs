@@ -72,6 +72,7 @@ public class Homomorphism implements Comparable<Homomorphism> {
             current = current.parental;
             hasValue[k] = true;
         }
+        parental = null;
     }
 
     public Vertex getVertex(int i) {
@@ -107,7 +108,6 @@ public class Homomorphism implements Comparable<Homomorphism> {
             System.exit(0);
         }
         Cube pseudo = this.preimage.faces[2 * i + (sign == '-' ? 0 : 1)];
-        System.out.println(pseudo);
         for(int k = 0; k < that.preimage.size(); k++) {
             if(this.get(pseudo.getVertex(k).id) != that.get(k)) return this.get(pseudo.getVertex(k).id) - that.get(k);
         }

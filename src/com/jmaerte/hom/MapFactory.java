@@ -4,12 +4,10 @@ import com.jmaerte.graph.Vertex;
 import com.jmaerte.graph.cube.Cube;
 import com.jmaerte.graph.Graph;
 import com.jmaerte.util.IndexList;
-import com.jmaerte.util.Shifter;
 import com.jmaerte.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -56,6 +54,7 @@ public class MapFactory {
             hom.finish();
             list.add(hom);
         }
+        System.gc();
     }
 
     public IndexList<Homomorphism> generate() {
