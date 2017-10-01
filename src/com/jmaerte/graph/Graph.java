@@ -47,4 +47,18 @@ public class Graph {
         }
         return s + "]";
     }
+
+    public static Graph getGon(int n) {
+        IndexList<Vertex> vertices = new IndexList<Vertex>(Vertex[].class);
+        VertexFactory factory = new VertexFactory();
+        for(int i = 0; i < n; i++) {
+            vertices.add(factory.genVertex(i+""));
+        }
+        Graph result = new Graph(vertices);
+        for(int i = 1; i < n; i++) {
+            result.addEdge(i - 1, i);
+        }
+        result.addEdge(0, n - 1);
+        return result;
+    }
 }

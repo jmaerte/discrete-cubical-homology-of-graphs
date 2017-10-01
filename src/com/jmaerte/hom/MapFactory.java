@@ -29,21 +29,19 @@ public class MapFactory {
      * @param i phi(0)
      */
     public void generate(ArrayList<Homomorphism> list, int i) throws Exception {
+        System.out.print("Generating all Homomorphisms phi, that satisfy phi(0) = " + i + ":\tCube-Vertex 1/" + preimage.size() + "\r");
         Homomorphism initial = new Homomorphism(new Homomorphism(preimage, image), i, 0);
         ArrayList<Homomorphism> homomorphisms = new ArrayList<>();
         homomorphisms.add(initial);
         for(int k = 1; k < preimage.size(); k++) {
+            System.out.print("Generating all Homomorphisms phi, that satisfy phi(0) = " + i + ":\tCube-Vertex " + (k + 1) + "/" + preimage.size() + "\r");
             ArrayList<Homomorphism> next = new ArrayList<>();
             for(Homomorphism hom : homomorphisms) {
                 int[] poss = possibilities(hom, k);
                 for(int l = 0; l < poss.length; l++) {
                     Homomorphism homomorphism = new Homomorphism(hom, poss[l], k);
                     if(k + 1 == preimage.size()) {
-                        boolean isZero = false;
-                        for(int j = 0; j < preimage.dimension; j++) {
-                            isZero |= homomorphism.isZero(j);
-                        }
-                        if(!isZero) next.add(homomorphism);
+                        if(!homomorphism.isZero()) next.add(homomorphism);
                     }else next.add(homomorphism);
                 }
             }
@@ -68,6 +66,8 @@ public class MapFactory {
         }
 //        Collections.sort(list);
         IndexList<Homomorphism> result = new IndexList<>(Homomorphism[].class, list.size());
+        System.out.println();
+        System.out.println("Sorting...");
         for(Homomorphism hom : list) result.add(hom);
         return result;
     }
@@ -77,7 +77,7 @@ public class MapFactory {
         Vertex v = hom.preimage.getVertex(i);
         int count = 0;
         for(int j = 0; j < v.adjacency.occupation(); j++) {
-            if(hom.hasValue != null && hom.hasValue[v.adjacency.list[j].id] || hom.hasValue == null && v.adjacency.list[j].id <= hom.layer) count++;
+            if(hom.hasValue(v.adjacency.list[j].id)) count++;
         }
         if(count == 0) {
             // return all vertex indices.
@@ -91,7 +91,7 @@ public class MapFactory {
         count = 0;
         for(int j = 0; j < v.adjacency.occupation(); j++) {
             Vertex w = v.adjacency.list[j];
-            if(hom.hasValue != null && hom.hasValue[w.id] || hom.hasValue == null && w.id <= hom.layer) {
+            if(hom.hasValue(w.id)) {
                 Vertex imw = hom.image.getVertex(hom.get(w.id));// imw = image w under hom
                 // now we got the possibilities to choose either hom(v) = imw or hom(v) in imw.adjacency
                 int[] possibilitiesW = new int[imw.adjacency.occupation() + 1];

@@ -21,6 +21,7 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     public boolean addEdge(Vertex that) {
+        if(that.id == this.id) return false;
         return adjacency.add(that);
     }
 

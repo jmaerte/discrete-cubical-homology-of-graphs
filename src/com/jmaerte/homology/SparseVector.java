@@ -61,8 +61,8 @@ public class SparseVector implements Comparable<SparseVector> {
         int k = index(i);
 
         if(k < occupation && indices[k] == i) {
-            if(value != 0) {
-                values[k] = value;
+            if(values[k] + value != 0) {
+                values[k] += value;
             }else{
                 remove(k);
             }

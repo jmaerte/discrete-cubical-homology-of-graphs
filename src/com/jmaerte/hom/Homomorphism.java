@@ -43,6 +43,7 @@ public class Homomorphism implements Comparable<Homomorphism> {
         this.image = image;
         this.values = values;
         this.hasValue = hasValue;
+        this.layer = preimage.size();
     }
 
     protected void setValue(int i, int j) {
@@ -57,6 +58,18 @@ public class Homomorphism implements Comparable<Homomorphism> {
         }else {
             return i == layer ? value : parental.get(i);
         }
+    }
+
+    public boolean hasValue(int i) {
+        if(hasValue != null) return hasValue[i];
+        return i <= layer;
+    }
+
+    public boolean isZero() {
+        for(int i = 0; i < preimage.dimension; i++) {
+            if(isZero(i)) return true;
+        }
+        return false;
     }
 
     /**Fills in the values array from the overlying homomorphisms.
@@ -134,6 +147,15 @@ public class Homomorphism implements Comparable<Homomorphism> {
             s += image.getVertex(get(i)).id + (i + 1 != this.preimage.size() ? ", " : "}");
         }
         return s;
+    }
+
+    public String restrictionToString(int i, char sign) {
+        Cube pseudo = this.preimage.faces[2 * i + (sign == '+' ? 1 : 0)];
+        String s = "[";
+        for(int k = 0; k < pseudo.size(); k++) {
+            s += get(pseudo.getVertex(k).id) + (k == pseudo.size() - 1 ? "" : ", ");
+        }
+        return s + "]";
     }
 
 }

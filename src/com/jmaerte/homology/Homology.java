@@ -15,9 +15,18 @@ public class Homology {
         this.graph = graph;
     }
 
-    public void homology(int min, int max) {
+    /**Calculates the homology groups between min and max.
+     * [H_min(graph), ... ,H_max(graph)]
+     * @param min
+     * @param max
+     */
+    public void homology(int min, int max) throws Exception {
+        System.out.println("Calculating H_" + min + "(G),...,H_" + max + "(G), where G is the graph:");
+        System.out.println(graph);
+
+        if(0 >= min || min > max) throw new Exception("Invalid Boundaries!");
         IndexList<Homomorphism>[] cache = new IndexList[]{
-                new IndexList(Homomorphism[].class),
+                generate(min - 1),
                 new IndexList(Homomorphism[].class)
         };
         Smith[] smithCache = new Smith[]{
@@ -26,24 +35,30 @@ public class Homology {
         };
 
         String homology = "[";
-        int r = 1;
+        boolean overflowLastTime = false;
 
-        for(int i = min - 1; i <= max + 1; i++) {
-            if(i < 0) {
-                cache[1] = new IndexList<>(Homomorphism[].class);
-            }else {
-                cache[1] = generate(i);
-                // use cache[0] and cache[1]
-                try {
-                    smithCache[1] = smith(boundary(cache[0], cache[1], i), true);
-                    homology += Smith.calculateHom(r, smithCache) + (i == max + 1 ? "" : ", ");
-                }catch(Exception e) {
-                    e.printStackTrace();
+        System.out.println("Found " + cache[0].occupation() + " non-degenerated graph homomorphisms between the " + (min - 1) + "-Cube and the input graph.");
+
+        for(int i = min; i <= max + 1; i++) {
+            cache[1] = generate(i);
+            System.out.println("Found " + cache[1].occupation() + " non-degenerated graph homomorphisms between the " + i + "-Cube and the input graph.");
+            // use cache[0] and cache[1]
+            try {
+                smithCache[1] = smith(boundary(cache[0], cache[1], i), false);
+                if(i > min) {
+                    if(overflowLastTime) homology += "---" + (i == max + 1 ? "" : ", ");
+                    else homology += Smith.calculateHom(cache[0].occupation(), smithCache) + (i == max + 1 ? "" : ", ");
                 }
-                cache[0] = cache[1];
-                smithCache[0] = smithCache[1];
+                System.out.println(Colors.PURPLE + "-- DONE! --" + Colors.RESET);
+                overflowLastTime = false;
+            }catch(Exception e) {
+                e.printStackTrace();
+                homology += "---" + (i == max + 1 ? "" : ", ");
+                System.out.println("-- " + Colors.RED + "ERROR: " + Colors.RESET + "Overflow Exception. Please use Bignum-Version! --");
+                overflowLastTime = true;
             }
-            r = cache[0].occupation();
+            cache[0] = cache[1];
+            smithCache[0] = smithCache[1];
         }
         homology += "]";
         System.out.println(homology);
@@ -51,7 +66,8 @@ public class Homology {
 
     private IndexList<Homomorphism> generate(int i) {
         MapFactory factory = new MapFactory(i, graph);
-        return factory.generate();
+        IndexList<Homomorphism> result = factory.generate();
+        return result;
     }
 
     public Vector4D<Integer, int[], SparseVector[], ArrayList<SparseVector>> boundary(IndexList<Homomorphism> lower, IndexList<Homomorphism> higher, int n) throws Exception {
@@ -69,8 +85,12 @@ public class Homology {
             for(int j = 0; j < n; j++) {
                 int m = binarySearch(lower, hom, j, '-');
                 int p = binarySearch(lower, hom, j, '+');
-                vector.set(m, sign);
-                vector.set(p, -sign);
+                if(m < lower.occupation() && hom.compareToRestricted('-', j, lower.list[m]) == 0) {
+                    vector.set(m, sign);
+                }
+                if(p < lower.occupation() && hom.compareToRestricted('+', j, lower.list[p]) == 0) {
+                    vector.set(p, -sign);
+                }
                 sign *= -1;
             }
 
@@ -260,8 +280,7 @@ public class Homology {
         return left;
     }
 
-    public int binarySearch(IndexList<Homomorphism> lower, Homomorphism hom, int i, char sign) {
-        System.out.println(hom + " " + i + " " + sign);
+    public static int binarySearch(IndexList<Homomorphism> lower, Homomorphism hom, int i, char sign) {
         int left = 0;
         int right = lower.occupation();
         while(left < right) {

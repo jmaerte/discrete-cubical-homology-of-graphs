@@ -71,15 +71,15 @@ public class Smith {
         return s + "]";
     }
 
-    public static String calculateHom(int fi, Smith[] cache) {
+    public static String calculateHom(int sizeLower, Smith[] cache) {
         if(cache.length < 2) return "";
-        int rank = fi - cache[0].rank;
+        int rankKernel = sizeLower - cache[0].rank;
         String s = "";
         for(int k = 0; k < cache[1].occupation; k++) {
             if(cache[1].values[k] == 1) continue;
-            s += (s == "" ? "" : " + ") + "Z_" + cache[1].values[k] + "^" + cache[1].amount[k];
+            s += (s == "" ? "" : " + ") + "Z_" + cache[1].values[k] + (cache[1].amount[k] != 1 ? "^" + cache[1].amount[k] : "");
         }
-        if(rank - cache[1].rank != 0) s += (s == "" ? "" : " + ") + "Z^" + (rank - cache[1].rank);
+        if(rankKernel - cache[1].rank != 0) s += (s == "" ? "" : " + ") + "Z" + (rankKernel - cache[1].rank != 1 ? "^" + (rankKernel - cache[1].rank) : "");
         return s == "" ? "0" : s;
     }
 }
