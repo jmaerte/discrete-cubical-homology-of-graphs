@@ -11,7 +11,7 @@ public class IndexList <T extends Comparable<T>> {
 
     public T[] list;
     private Class<T[]> clazz;
-    private int occupation;
+    public int occupation;
 
     public IndexList(Class<T[]> clazz, int initial) {
         this.clazz = clazz;

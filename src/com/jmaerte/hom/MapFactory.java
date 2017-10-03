@@ -6,6 +6,7 @@ import com.jmaerte.graph.Graph;
 import com.jmaerte.util.IndexList;
 import com.jmaerte.util.Utils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,10 +26,9 @@ public class MapFactory {
 
     /** Generates all homomorphisms phi: cube -> graph that satisfy phi(0) = i
      *
-     * @param list list to fill
      * @param i phi(0)
      */
-    public void generate(ArrayList<Homomorphism> list, int i) throws Exception {
+    public Homomorphism[] generate(int i) throws Exception {
         System.out.print("Generating all Homomorphisms phi, that satisfy phi(0) = " + i + ":\tCube-Vertex 1/" + preimage.size() + "\r");
         Homomorphism initial = new Homomorphism(new Homomorphism(preimage, image), i, 0);
         ArrayList<Homomorphism> homomorphisms = new ArrayList<>();
@@ -37,39 +37,51 @@ public class MapFactory {
             System.out.print("Generating all Homomorphisms phi, that satisfy phi(0) = " + i + ":\tCube-Vertex " + (k + 1) + "/" + preimage.size() + "\r");
             ArrayList<Homomorphism> next = new ArrayList<>();
             for(Homomorphism hom : homomorphisms) {
-                int[] poss = possibilities(hom, k);
+                int[] poss = new int[0];
+                try {
+                    poss = possibilities(hom, k);
+                }catch(Exception e) {}
                 for(int l = 0; l < poss.length; l++) {
                     Homomorphism homomorphism = new Homomorphism(hom, poss[l], k);
                     if(k + 1 == preimage.size()) {
-                        if(!homomorphism.isZero()) next.add(homomorphism);
+                        if(!homomorphism.isZero()) {
+                            homomorphism.finish();
+                            next.add(homomorphism);
+                        }
                     }else next.add(homomorphism);
                 }
             }
             homomorphisms = next;
         }
-        // check if any of the homomorphisms is zero.
-        for(Homomorphism hom : homomorphisms) {
-            hom.finish();
-            list.add(hom);
-        }
+        Homomorphism[] arr = Homomorphism[].class.cast(Array.newInstance(Homomorphism.class, homomorphisms.size()));
+        for(int k = 0; k < homomorphisms.size(); k++) arr[k] = homomorphisms.get(k);
+        Arrays.sort(arr);
         System.gc();
+        return arr;
     }
 
     public IndexList<Homomorphism> generate() {
-        ArrayList<Homomorphism> list = new ArrayList<>();
+        IndexList<Homomorphism> results = new IndexList<>(Homomorphism[].class);
+        Homomorphism[][] lists = new Homomorphism[image.size()][];
+        int occ = 0;
         for(int i = 0; i < image.size(); i++) {
             try {
-                generate(list, i);
+                lists[i] = generate(i);
+                occ += lists[i].length;
             }catch(Exception e) {
                 e.printStackTrace();
             }
         }
-//        Collections.sort(list);
-        IndexList<Homomorphism> result = new IndexList<>(Homomorphism[].class, list.size());
-        System.out.println();
-        System.out.println("Sorting...");
-        for(Homomorphism hom : list) result.add(hom);
-        return result;
+
+        Homomorphism[] arr = Homomorphism[].class.cast(Array.newInstance(Homomorphism.class, occ));
+        occ = 0;
+        for(int i = 0; i < lists.length; i++) {
+            System.arraycopy(lists[i], 0, arr, occ, lists[i].length);
+            occ += lists[i].length;
+        }
+        results.list = arr;
+        results.occupation = occ;
+        return results;
     }
 
     public static int[] possibilities(Homomorphism hom, int i) throws Exception {

@@ -9,7 +9,7 @@ public class Graph {
 
     protected IndexList<Vertex> vertices;
     protected int edges = 0;
-    protected VertexFactory factory;
+    public VertexFactory factory;
 
     public Graph(IndexList<Vertex> vertices) {
         this.vertices = vertices;

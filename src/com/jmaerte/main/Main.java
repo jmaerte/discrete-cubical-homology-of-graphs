@@ -5,7 +5,9 @@ import com.jmaerte.hom.MapFactory;
 import com.jmaerte.homology.Homology;
 import com.jmaerte.graph.cube.Cube;
 import com.jmaerte.graph.Graph;
+import com.jmaerte.io.IO;
 import com.jmaerte.util.IndexList;
+import com.jmaerte.util.Vector3D;
 
 /**
  * Created by Julian on 28/09/2017.
@@ -13,7 +15,37 @@ import com.jmaerte.util.IndexList;
 public class Main {
 
     public static void main(String[] args) {
-        Graph graph = Graph.getGon(5);
+//        Graph graph = Graph.getGon(5);
+        Vector3D<Graph, Integer, Integer> graphTriple = IO.fromConsole();
+//        Graph graph = new Graph();
+//        graph.addVertex("a");
+//        graph.addVertex("b");
+//        graph.addVertex("c");
+//        graph.addVertex("d");
+//        graph.addVertex("e");
+//        graph.addVertex("f");
+//        graph.addVertex("g");
+//        graph.addVertex("h");
+//        graph.addVertex("i");
+//        graph.addVertex("j");
+//
+//        graph.addEdge(0,1);
+//        graph.addEdge(0,2);
+//        graph.addEdge(0,3);
+//        graph.addEdge(0,4);
+//        graph.addEdge(1,5);
+//        graph.addEdge(2,5);
+//        graph.addEdge(2,6);
+//        graph.addEdge(3,6);
+//        graph.addEdge(3,7);
+//        graph.addEdge(4,7);
+//        graph.addEdge(4,8);
+//        graph.addEdge(1,8);
+//        graph.addEdge(5,9);
+//        graph.addEdge(6,9);
+//        graph.addEdge(7,9);
+//        graph.addEdge(8,9);
+
 
 //        Graph graph = new Graph();
 //        graph.addVertex("1");
@@ -37,11 +69,6 @@ public class Main {
 
 
 //        System.out.println(graph);
-
-        Cube cube = new Cube(3);
-        Cube square = new Cube(2);
-//        System.out.println(cube);
-//        System.out.println(square);
 
 //        int[] val = new int[8];
 //        boolean[] hasVal = new boolean[8];
@@ -124,9 +151,9 @@ public class Main {
 //        System.out.println(factory.generate());
 
         long ms = System.currentTimeMillis();
-        Homology homology = new Homology(graph);
+        Homology homology = new Homology(graphTriple.x);
         try {
-            homology.homology(1, 3);
+            homology.homology(graphTriple.y, graphTriple.z);
         }catch(Exception e) {
             e.printStackTrace();
         }
