@@ -2,6 +2,9 @@ package com.jmaerte.graph;
 
 import com.jmaerte.util.IndexList;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by Julian on 28/09/2017.
  */
@@ -20,20 +23,34 @@ public class Graph {
         this(new IndexList<>(Vertex[].class));
     }
 
-    public void addVertex(String label) {
-        vertices.add(factory.genVertex(label));
+    public Vertex addVertex(String label) {
+        boolean exists = false;
+        Set<Map.Entry<Integer, String>> entries = factory.labels.entrySet();
+        for(Map.Entry<Integer, String> entry : entries) {
+            if(entry.getValue().equals(label)) exists = true;
+        }
+        if(!exists){
+            Vertex v = factory.genVertex(label);
+            vertices.add(v);
+            return v;
+        }
+        return null;
     }
 
     public Vertex getVertex(int i) {
         return (i < this.vertices.occupation() && i >= 0) ? this.vertices.list[i] : null;
     }
 
-    public void addEdge(int i, int j) {
-        link(vertices.list[i], vertices.list[j]);
+    public boolean addEdge(int i, int j) {
+        return link(vertices.list[i], vertices.list[j]);
     }
 
-    protected void link(Vertex a, Vertex b) {
-        if(a.addEdge(b) && b.addEdge(a)) edges++;
+    protected boolean link(Vertex a, Vertex b) {
+        if(a.addEdge(b) && b.addEdge(a)) {
+            edges++;
+            return true;
+        }
+        return false;
     }
 
     public int size() {
@@ -52,9 +69,10 @@ public class Graph {
         IndexList<Vertex> vertices = new IndexList<Vertex>(Vertex[].class);
         VertexFactory factory = new VertexFactory();
         for(int i = 0; i < n; i++) {
-            vertices.add(factory.genVertex(i+""));
+            vertices.add(factory.genVertex((i + 1) + ""));
         }
         Graph result = new Graph(vertices);
+        result.factory = factory;
         for(int i = 1; i < n; i++) {
             result.addEdge(i - 1, i);
         }

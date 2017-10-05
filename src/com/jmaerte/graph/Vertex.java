@@ -36,7 +36,7 @@ public class Vertex implements Comparable<Vertex> {
     public String toString() {
         String s = factory.labels.get(id) + " | " + id + " -> [";
         for(int i = 0; i < adjacency.occupation(); i++) {
-            s+= adjacency.list[i].id + (i == adjacency.occupation() - 1 ? "" : ", ");
+            s+= factory.labels.get(adjacency.list[i].id) + (i == adjacency.occupation() - 1 ? "" : ", ");
         }
         return s + "]";
     }

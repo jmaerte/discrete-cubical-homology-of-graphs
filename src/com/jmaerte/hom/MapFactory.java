@@ -84,6 +84,13 @@ public class MapFactory {
         return results;
     }
 
+    /**
+     *
+     * @param hom
+     * @param i >= 1
+     * @return
+     * @throws Exception
+     */
     public static int[] possibilities(Homomorphism hom, int i) throws Exception {
         if(hom.hasValue != null && hom.hasValue[i] || hom.hasValue == null && i <= hom.layer) throw new Exception("Value set already.");
         Vertex v = hom.preimage.getVertex(i);

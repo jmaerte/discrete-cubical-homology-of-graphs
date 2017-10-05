@@ -64,6 +64,16 @@ public class Homology {
         System.out.println(homology);
     }
 
+    public void homomorphisms(int min, int max) {
+        System.out.println("Calculating C_" + min + "(G),...,C_" + max + "(G), where G is the graph:");
+        System.out.println(graph);
+        for(int i = min; i <= max; i++) {
+            System.out.println("Found " + generate(i).occupation() + " non-degenerated graph homomorphisms between the " + i + "-Cube and the input graph.");
+        }
+
+    }
+
+
     private IndexList<Homomorphism> generate(int i) {
         MapFactory factory = new MapFactory(i, graph);
         IndexList<Homomorphism> result = factory.generate();
