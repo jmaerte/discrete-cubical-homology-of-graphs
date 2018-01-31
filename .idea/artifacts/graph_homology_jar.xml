@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="graph_homology:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/graph_homology_jar</output-path>
-    <root id="archive" name="graph_homology.jar">
-      <element id="module-output" name="graph_homology" />
-    </root>
-  </artifact>
-</component>
